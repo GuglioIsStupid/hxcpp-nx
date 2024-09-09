@@ -1879,6 +1879,10 @@ class BuildTool
          defines.set("apple","apple");
          defines.set("BINDIR","iPhone");
       }
+      else if (defines.exists("switch")) {
+         defines.set("toolchain", "switch")'
+         defines.set("switch", "switch");'
+      }
       else if (defines.exists("iphonesim"))
       {
          defines.set("toolchain","iphonesim");

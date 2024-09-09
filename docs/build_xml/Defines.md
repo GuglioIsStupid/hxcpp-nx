@@ -88,3 +88,4 @@ Defines affecting target architecture.
 | *HXCPP_MINGW*           | Compile for windows using mingw |
 | *NO_AUTO_MSVC*          | Do not detect msvc location, use the one already in the executable path |
 | *HXCPP_WINXP_COMPAT*    | Remain compatible with Windows XP. Disables condition variables. No effect on ARM. |
+| *switch*                | (Cross) Compile for Nintendo Switch (NRO)

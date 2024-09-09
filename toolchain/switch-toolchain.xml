@@ -1,0 +1,57 @@
+<xml>
+
+<include name="toolchain/gcc-toolchain.xml"/>
+
+<compier id="switch" exe="aarch64-none-elf-g++">
+    <exe name="${CXX}" if="CXX" />
+    <flag value="-c"/>
+    <flag value="-fvisibility=hidden"/>
+    <cppflag value="-frtti"/>
+    <cppflag value="-std=c++11" if="HXCPP_CPP11" />
+    <cppflag value="-std=c++17" if="HXCPP_CPP17"/>
+    <flag value="-g" if="debug"/>
+    <flag value="-O2" unless="debug"/>
+    <flag value="-fpic"/>
+    <flag value="-fPIC"/>
+    <flag value="-Wno-overflow" />
+    <cppflag value="-Wno-invalid-offsetof" />
+    
+    <include name="toolchain/common-defines.xml" />
+    <flag value="-m32" unless="noM32"/>
+    <flag value="-m64" if="HXCPP_M64" unless="noM64" />
+    <flag value="-DHXCPP_M64" if="HXCPP_M64"/>
+    <flag value="-I${HXCPP}/include"/>
+    <objdir value="obj/switch${OBJEXT}/"/>
+    <outflag value="-o"/>
+    <ext value=".o"/>
+</compiler>
+
+<linker id="dll" exe="aarch64-none-elf-g++">
+    <exe name="${CXX}" if="CXX" />
+    <fromfile value="" if="GCC_OLD" />
+    <flag value="-shared"/>
+    <flag value="-fpic"/>
+    <flag value="-fPIC"/>
+    <flag value="-m32" unless="noM32"/>
+    <flag value="-m64" if="HXCPP_M64" unless="noM64" />
+    <flag value="-Xlinker"/>
+    <flag value="--no-undefined" unless="HXCPP_ALLOW_UNDEFINED" />
+    <flag value="-debug" if="debug"/>
+    <lib name="-ldl"/>
+    <ext value=".dso"/>
+    <outflag value="-o "/>
+</linker>
+
+<linker id="exe" exe="aarch64-none-elf-g++">
+    <exe name="${CXX}" if="CXX" />
+    <fromfile value="" if="GCC_OLD" />
+    <flag value="-debug" if="debug"/>
+    <flag value="-rdynamic"/>
+    <flag value="-m32" unless="noM32"/>
+    <flag value="-m64" if="HXCPP_M64" unless="noM64" />
+    <lib name="-ldl"/>
+    <ext value=""/>
+    <outflag value="-o "/>
+</linker>
+
+</xml>
