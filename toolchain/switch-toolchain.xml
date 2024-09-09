@@ -34,7 +34,7 @@
     <ext value=".o"/>
 </compiler>
 
-<linker id="elf" exe="g++">
+<linker id="exe" exe="aarch64-none-elf-g++">
     <exe name="${CXX}" if="CXX" />
     <fromfile value="" if="GCC_OLD" />
     <flag value="-debug" if="debug"/>
