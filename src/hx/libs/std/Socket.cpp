@@ -846,6 +846,7 @@ Array<Dynamic> _hx_std_socket_select( Array<Dynamic> rs, Array<Dynamic> ws, Arra
 **/
 void _hx_std_socket_fast_select( Array<Dynamic> rs, Array<Dynamic> ws, Array<Dynamic> es, Dynamic timeout )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET n = 0;
    fd_set rx, wx, ex;
    fd_set *ra, *wa, *ea;
@@ -880,6 +881,9 @@ void _hx_std_socket_fast_select( Array<Dynamic> rs, Array<Dynamic> ws, Array<Dyn
    make_array_result_inplace(rs, ra);
    make_array_result_inplace(ws, wa);
    make_array_result_inplace(es, ea);
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -888,6 +892,7 @@ void _hx_std_socket_fast_select( Array<Dynamic> rs, Array<Dynamic> ws, Array<Dyn
 **/
 void _hx_std_socket_bind( Dynamic o, int host, int port )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
 
    int opt = 1;
@@ -907,6 +912,9 @@ void _hx_std_socket_bind( Dynamic o, int host, int port )
       hx::Throw(HX_CSTRING("Bind failed"));
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -916,6 +924,7 @@ void _hx_std_socket_bind( Dynamic o, int host, int port )
 **/
 void _hx_std_socket_bind_ipv6( Dynamic o, Array<unsigned char> host, int port )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
 
    int opt = 1;
@@ -936,6 +945,9 @@ void _hx_std_socket_bind_ipv6( Dynamic o, Array<unsigned char> host, int port )
       hx::Throw(HX_CSTRING("Bind failed"));
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -954,6 +966,7 @@ void _hx_std_socket_bind_ipv6( Dynamic o, Array<unsigned char> host, int port )
 
 Dynamic _hx_std_socket_accept( Dynamic o )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    struct sockaddr_in addr;
    SockLen addrlen = sizeof(addr);
@@ -967,6 +980,10 @@ Dynamic _hx_std_socket_accept( Dynamic o )
    SocketWrapper *wrap = new SocketWrapper();
    wrap->socket = s;
    return wrap;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -975,6 +992,7 @@ Dynamic _hx_std_socket_accept( Dynamic o )
 **/
 Array<int> _hx_std_socket_peer( Dynamic o )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    struct sockaddr_in addr;
    SockLen addrlen = sizeof(addr);
@@ -990,6 +1008,10 @@ Array<int> _hx_std_socket_peer( Dynamic o )
    ret[0] = *(int*)&addr.sin_addr;
    ret[1] = ntohs(addr.sin_port);
    return ret;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -998,6 +1020,7 @@ Array<int> _hx_std_socket_peer( Dynamic o )
 **/
 Array<int> _hx_std_socket_host( Dynamic o )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    struct sockaddr_in addr;
    SockLen addrlen = sizeof(addr);
@@ -1013,6 +1036,10 @@ Array<int> _hx_std_socket_host( Dynamic o )
    ret[0] = *(int*)&addr.sin_addr;
    ret[1] = ntohs(addr.sin_port);
    return ret;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -1021,6 +1048,7 @@ Array<int> _hx_std_socket_host( Dynamic o )
 **/
 void _hx_std_socket_set_timeout( Dynamic o, Dynamic t )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
 
 #if defined(NEKO_WINDOWS)
@@ -1052,6 +1080,9 @@ void _hx_std_socket_set_timeout( Dynamic o, Dynamic t )
       return;
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -1060,6 +1091,7 @@ void _hx_std_socket_set_timeout( Dynamic o, Dynamic t )
 **/
 void _hx_std_socket_shutdown( Dynamic o, bool r, bool w )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    if( !r && !w )
       return;
@@ -1071,6 +1103,9 @@ void _hx_std_socket_shutdown( Dynamic o, bool r, bool w )
       return;
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -1081,6 +1116,7 @@ void _hx_std_socket_shutdown( Dynamic o, bool r, bool w )
 
 void _hx_std_socket_set_blocking( Dynamic o, bool b )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    hx::EnterGCFreeZone();
 #if defined(NEKO_WINDOWS)
@@ -1113,25 +1149,36 @@ void _hx_std_socket_set_blocking( Dynamic o, bool b )
 #endif
    hx::ExitGCFreeZone();
    return;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
 void _hx_std_socket_set_fast_send( Dynamic o, bool b )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    int fast = (b);
    hx::EnterGCFreeZone();
    setsockopt(sock,IPPROTO_TCP,TCP_NODELAY,(char*)&fast,sizeof(fast));
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 void _hx_std_socket_set_broadcast( Dynamic o, bool b )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    int broadcast = (b);
    hx::EnterGCFreeZone();
    setsockopt(sock,SOL_SOCKET,SO_BROADCAST,(char*)&broadcast,sizeof(broadcast));
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -1156,10 +1203,6 @@ struct polldata : public hx::Object
    struct fd_set *fdw;
    struct fd_set *outr;
    struct fd_set *outw;
-   #else
-   struct pollfd *fds;
-   int rcount;
-   int wcount;
    #endif
    Array<int> ridx;
    Array<int> widx;
@@ -1176,12 +1219,6 @@ struct polldata : public hx::Object
       fdr->fd_count = 0;
       fdw->fd_count = 0;
 
-      #else
-      fds = (struct pollfd*)malloc(sizeof(struct pollfd) * max);
-      rcount = 0;
-      wcount = 0;
-      #endif
-
       ridx = Array_obj<int>::__new(max+1,max+1);
       HX_OBJ_WB_GET(this, ridx.mPtr);
       widx = Array_obj<int>::__new(max+1,max+1);
@@ -1193,10 +1230,12 @@ struct polldata : public hx::Object
       }
 
       _hx_set_finalizer(this, finalize);
+      #endif
    }
 
    void destroy()
    {
+      #if defined(NEKO_WINDOWS)
       if (ok)
       {
          ok = false;
@@ -1210,6 +1249,7 @@ struct polldata : public hx::Object
          free(fds);
          #endif
       }
+      #endif
    }
 
    void __Mark(hx::MarkContext *__inCtx) { HX_MARK_MEMBER(ridx); HX_MARK_MEMBER(widx); }
@@ -1221,7 +1261,9 @@ struct polldata : public hx::Object
 
    static void finalize(Dynamic obj)
    {
+      #if defined(NEKO_WINDOWS)
       ((polldata *)(obj.mPtr))->destroy();
+      #endif
    }
 
    String toString() { return HX_CSTRING("polldata"); }
@@ -1229,9 +1271,14 @@ struct polldata : public hx::Object
 
 polldata *val_poll(Dynamic o)
 {
+   #if defined(NEKO_WINDOWS)
    if (!o.mPtr || o->__GetType()!=pollType)
       hx::Throw(HX_CSTRING("Invalid polldata:") + o);
    return static_cast<polldata *>(o.mPtr);
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 
@@ -1241,6 +1288,7 @@ polldata *val_poll(Dynamic o)
 
 Dynamic _hx_std_socket_poll_alloc( int nsocks )
 {
+   #if defined(NEKO_WINDOWS)
    if( nsocks < 0 || nsocks > 1000000 )
       return null();
 
@@ -1250,6 +1298,10 @@ Dynamic _hx_std_socket_poll_alloc( int nsocks )
    polldata *p = new polldata;
    p->create(nsocks);
    return p;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -1260,6 +1312,7 @@ Dynamic _hx_std_socket_poll_alloc( int nsocks )
 **/
 Array<Dynamic> _hx_std_socket_poll_prepare( Dynamic pdata, Array<Dynamic> rsocks, Array<Dynamic> wsocks )
 {
+   #if defined(NEKO_WINDOWS)
    polldata *p = val_poll(pdata);
 
    int len = rsocks.mPtr ? rsocks->length : 0;
@@ -1302,6 +1355,10 @@ Array<Dynamic> _hx_std_socket_poll_prepare( Dynamic pdata, Array<Dynamic> rsocks
    a[0] = p->ridx;
    a[1] = p->widx;
    return a;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 
@@ -1313,6 +1370,7 @@ Array<Dynamic> _hx_std_socket_poll_prepare( Dynamic pdata, Array<Dynamic> rsocks
 **/
 void _hx_std_socket_poll_events( Dynamic pdata, double timeout )
 {
+   #if defined(NEKO_WINDOWS)
    polldata *p = val_poll(pdata);
 
    #if defined(NEKO_WINDOWS)
@@ -1367,6 +1425,9 @@ void _hx_std_socket_poll_events( Dynamic pdata, double timeout )
          p->widx[k++] = i - p->rcount;
    p->widx[k] = -1;
    #endif
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -1379,6 +1440,7 @@ void _hx_std_socket_poll_events( Dynamic pdata, double timeout )
 **/
 Array<Dynamic> _hx_std_socket_poll( Array<Dynamic> socks, Dynamic pdata, double timeout )
 {
+   #if defined(NEKO_WINDOWS)
    polldata *p = val_poll(pdata);
 
    _hx_std_socket_poll_prepare(pdata,socks,null());
@@ -1393,6 +1455,10 @@ Array<Dynamic> _hx_std_socket_poll( Array<Dynamic> socks, Dynamic pdata, double 
    for(int i=0;i<rcount;i++)
       a[i] = socks[p->ridx[i]];
    return a;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 
@@ -1405,6 +1471,7 @@ Array<Dynamic> _hx_std_socket_poll( Array<Dynamic> socks, Dynamic pdata, double 
 **/
 int _hx_std_socket_send_to( Dynamic o, Array<unsigned char> buf, int p, int l, Dynamic inAddr )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
 
    const char *cdata = (const char *)&buf[0];
@@ -1431,6 +1498,10 @@ int _hx_std_socket_send_to( Dynamic o, Array<unsigned char> buf, int p, int l, D
    }
    hx::ExitGCFreeZone();
    return dlen;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 /**
@@ -1442,6 +1513,7 @@ int _hx_std_socket_send_to( Dynamic o, Array<unsigned char> buf, int p, int l, D
 #define NRETRYS   20
 int _hx_std_socket_recv_from( Dynamic o, Array<unsigned char> buf, int p, int l, Dynamic outAddr)
 {
+   #if defined(NEKO_WINDOWS)
    int retry = 0;
    SOCKET sock = val_sock(o);
 
@@ -1470,6 +1542,10 @@ int _hx_std_socket_recv_from( Dynamic o, Array<unsigned char> buf, int p, int l,
    outAddr->__SetField(HX_CSTRING("port"),ntohs(saddr.sin_port), hx::paccDynamic);
 
    return ret;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 
