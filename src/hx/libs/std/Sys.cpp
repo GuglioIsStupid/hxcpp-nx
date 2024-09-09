@@ -23,7 +23,6 @@
    #ifndef EPPC
       #include <unistd.h>
       #include <dirent.h>
-      #include <termios.h>
       #include <sys/time.h>
       #include <sys/times.h>
    #endif
