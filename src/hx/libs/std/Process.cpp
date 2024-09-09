@@ -551,7 +551,3 @@ void _hx_std_process_kill( Dynamic handle ) { }
 
 #endif // HX_WINRT
 
-// if int _hx_std_process_exit isn't set still, set it to 0
-#ifndef _hx_std_process_exit
-int _hx_std_process_exit( Dynamic handle ) { return 0; }
-#endif
