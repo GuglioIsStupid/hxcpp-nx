@@ -65,7 +65,7 @@ sure both macros are undefined; an emulation function will then be used. */
 /* #undef HAVE_DIRENT_H */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
-/* #undef HAVE_DLFCN_H */
+#undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the <editline/readline.h> header file. */
 /* #undef HAVE_EDITLINE_READLINE_H */
