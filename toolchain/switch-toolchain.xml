@@ -20,6 +20,12 @@
     <flag value="-DHXCPP_M64" if="HXCPP_M64"/>
     <flag value="-I${HXCPP}/include"/>
     <flag value="-I${MINGW_ROOT}/include"/>
+    <flag value="-I${DEVKITPRO}/libnx/include"/>
+
+    <!--LIB Links-->
+    <flag value="-L${MINGW_ROOT}/usr/lib" />
+    <flag value="-L${DEVKITPRO}/libnx/lib" />
+
 
     <objdir value="obj/switch${OBJEXT}/"/>
     <outflag value="-o"/>
