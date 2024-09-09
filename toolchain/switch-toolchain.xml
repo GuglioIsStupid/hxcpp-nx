@@ -2,7 +2,7 @@
 
 <include name="toolchain/gcc-toolchain.xml"/>
 
-<compier id="switch" exe="aarch64-none-elf-g++">
+<compiler id="switch" exe="aarch64-none-elf-g++">
     <exe name="${CXX}" if="CXX" />
     <flag value="-c"/>
     <flag value="-fvisibility=hidden"/>
