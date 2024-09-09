@@ -269,10 +269,8 @@ String _hx_std_sys_string()
    return HX_CSTRING("Emscripten");
 #elif defined(EPPC)
    return HX_CSTRING("EPPC");
-#elif defined(SWITCH)
-   return HX_CSTRING("Switch");
 #else
-#error Unknow system string
+   return HX_CSTRING("Switch");
 #endif
 }
 
@@ -324,7 +322,13 @@ int _hx_std_sys_command( String cmd )
    hx::ExitGCFreeZone();
 
    #if !defined(NEKO_WINDOWS)
-   result = WEXITSTATUS(result) | (WTERMSIG(result) << 8);
+   // use the WEXITSTATUS function if it exists
+   #ifdef WEXITSTATUS
+   if (WIFEXITED(result))
+      result = WEXITSTATUS(result) | (WTERMSIG(result) << 8);
+   #else
+   if (result >= 0)
+      result = result >> 8;
    #endif
 
    return result;
