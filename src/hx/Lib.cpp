@@ -62,7 +62,7 @@ void *hxFindSymbol(Module inModule, const char *inSymbol) { return (void *)GetPr
 
 void hxFreeLibrary(Module inModule) { FreeLibrary(inModule); }
 
-#elif !defined(SWITCH)
+#elif defined(HX_MACOS) || defined(HX_LINUX) || defined(HX_ANDROID) || defined(HX_WINDOWS) || defined(HX_MACOS) || defined(HX_FREEBSD) || defined(HX_SOLARIS) || defined(HX_QNX) || defined(HX_TIZEN) || defined(HX_RPI) || defined(HX_HAIKU) || defined(HX_TVOS) || defined(HX_PS4) || defined(HX_SWITCH) || defined(HX_UWP) || defined(HX_WINRT) || defined(HX_EMSCRIPTEN) || defined(HX_BLACKBERRY)
 
 typedef void *Module;
 
@@ -98,7 +98,7 @@ void *hxFindSymbol(Module inModule, const char *inSymbol) { return dlsym(inModul
 
 void hxFreeLibrary(Module inModule) { dlclose(inModule); }
 
-#elif defined(SWITCH)
+#else
 
 // Nintendo switch
 typedef void *Module;
