@@ -269,6 +269,8 @@ String _hx_std_sys_string()
    return HX_CSTRING("Emscripten");
 #elif defined(EPPC)
    return HX_CSTRING("EPPC");
+#elif defined(SWITCH)
+   return HX_CSTRING("Switch");
 #else
 #error Unknow system string
 #endif
