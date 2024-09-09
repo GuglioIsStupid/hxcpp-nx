@@ -52,7 +52,6 @@
     <exe name="${CXX}" if="CXX" />
     <fromfile value="" if="GCC_OLD" />
     <flag value="-debug" if="debug"/>
-    <lib name="-ldl"/>
     <ext value=""/>
     <outflag value="-o "/>
 </linker>
