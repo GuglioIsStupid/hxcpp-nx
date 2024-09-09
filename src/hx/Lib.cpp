@@ -66,7 +66,15 @@ void hxFreeLibrary(Module inModule) { FreeLibrary(inModule); }
 
 typedef void *Module;
 
+// Only use dlfcn on POSIX platforms
+#if (defined(HX_LINUX) || defined(HX_MACOS))
+#define USE_DLFCN
+#endif
+
+#ifdef USE_DLFCN
 #include <dlfcn.h>
+#endif
+
 typedef void *Module;
 Module hxLoadLibrary(String inLib)
 {
