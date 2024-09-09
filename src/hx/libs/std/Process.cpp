@@ -475,6 +475,7 @@ int _hx_std_process_exit( Dynamic handle )
       return rval;
    }
    #else
+   #ifdef waitpid
    int rval=0;
    while( waitpid(p->pid,&rval,0) != p->pid )
    {
@@ -488,6 +489,9 @@ int _hx_std_process_exit( Dynamic handle )
       return 0;
 
    return WEXITSTATUS(rval);
+   #else
+   hx::ExitGCFreeZone();
+   return 0;
    #endif
 }
 
