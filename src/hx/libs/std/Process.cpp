@@ -489,9 +489,13 @@ int _hx_std_process_exit( Dynamic handle )
       return 0;
 
    return WEXITSTATUS(rval);
+   
    #else
+   int rval;
+   wait(&rval);
    hx::ExitGCFreeZone();
-   return 0;
+   return rval;
+   #endif
    #endif
 }
 
