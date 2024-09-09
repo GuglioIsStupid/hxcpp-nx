@@ -1,6 +1,44 @@
 <xml>
 
-<include name="toolchain/gcc-toolchain.xml"/>
+<set name="NO_PRECOMPILED_HEADERS" value="1" if="GCC_OLD" />
+<set name="USE_PRECOMPILED_HEADERS" value="gcc" unless="NO_PRECOMPILED_HEADERS"/>
+
+<set name="USE_GCC_FILETYPES" value="1"/>
+
+<linker id="static_link" exe="ar" unless="windows">
+  <ext value="${LIBEXT}"/>
+
+  <exe name="${EXEPREFIX}-ar" if="EXEPREFIX" />
+  <exe name="${HXCPP_AR}" if="HXCPP_AR" />
+  <fromfile value="" if="GCC_OLD" />
+  <fromfile value="" if="tizen" />
+  <fromfile value="" if="blackberry" />
+  <outflag value="-cr "/>
+  <outflag value="cr " if="emscripten" />
+  <section if="HXCPP_USE_LIBTOOL">
+     <exe name="libtool"  />
+     <exe name="${HXCPP_LIBTOOL}" if="HXCPP_LIBTOOL" />
+     <outflag value="-o "  />
+     <fromfile value="-filelist " needsQuotes="false" />
+  </section>
+  <!-- <outflag value="-o " if="emscripten" /> -->
+  <recreate value="1" unless="HXCPP_LIBTOOL" />
+
+  <expandAr value="1" if="android" />
+  <expandAr value="1" if="emscripten" />
+  <expandAr value="1" if="linux" />
+  <section unless="HXCPP_USE_LIBTOOL">
+     <ranlib name="ranlib" />
+     <ranlib name="${EXEPREFIX}-ranlib" if="EXEPREFIX" />
+     <ranlib name="${HXCPP_RANLIB}" if="HXCPP_RANLIB" />
+  </section>
+</linker>
+
+<set name="nostrip" value="1" if="debug"/>
+<set name="nostrip" value="1" if="dll_import"/>
+<set name="nostrip" value="1" if="dll_export"/>
+<set name="nostrip" value="1" if="HXCPP_DEBUG_LINK"/>
+<unset name="nostrip" if="HXCPP_DEBUG_LINK_AND_STRIP"/>
 
 <compiler id="switch" exe="aarch64-none-elf-g++">
     <exe name="${CXX}" if="CXX" />
@@ -26,8 +64,6 @@
     <flag value="-L${MINGW_ROOT}/usr/lib" />
     <flag value="-L${DEVKITPRO}/libnx/lib" />
     <flag value="-L${DEVKITPRO}/libnx/lib/gcc/aarch64-none-elf/8.3.0" />
-    
-
 
     <objdir value="obj/switch${OBJEXT}/"/>
     <outflag value="-o"/>
@@ -38,8 +74,17 @@
     <exe name="${CXX}" if="CXX" />
     <fromfile value="" if="GCC_OLD" />
     <flag value="-debug" if="debug"/>
-    <ext value="elf"/>
+    <ext value=".elf"/>
     <outflag value="-o "/>
 </linker>
+
+<stripper id="strip" exe="elf2nro">
+    <!--Create the .nro from the .elf and romfs/control.nacp-->
+
+    <exe name="elf2nro"/>
+    <flag value="--nacp=romfs/control.nacp"/>
+    <flag value="--icon=${ICON}" if="ICON"/>
+
+</stripper>
 
 </xml>
