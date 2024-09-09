@@ -333,6 +333,7 @@ int _hx_std_sys_command( String cmd )
 
    return result;
    #endif
+   #endif
 }
 
 
