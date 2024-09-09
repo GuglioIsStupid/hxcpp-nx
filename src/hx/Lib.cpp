@@ -98,7 +98,7 @@ void *hxFindSymbol(Module inModule, const char *inSymbol) { return dlsym(inModul
 
 void hxFreeLibrary(Module inModule) { dlclose(inModule); }
 
-#elif defined(HX_SWITCH)
+#elif defined(SWITCH)
 
 // Nintendo switch
 typedef void *Module;
