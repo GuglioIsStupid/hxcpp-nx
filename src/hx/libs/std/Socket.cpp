@@ -5,7 +5,7 @@
 #include <string.h>
 
 
-#ifdef NEKO_WINDOWS
+#if defined(NEKO_WINDOWS)
 
 #ifdef __GNUC__
    // Mingw / gcc on windows
@@ -112,7 +112,7 @@ SOCKET val_sock(Dynamic inValue)
 static void block_error()
 {
 
-#ifdef NEKO_WINDOWS
+#if defined(NEKO_WINDOWS)
    int err = WSAGetLastError();
    // call ExitGCFreeZone after WSAGetLastError, WSAGetLastError is just an alias for GetLastError and
    // calling ExitGCFreeZone will on some cases clear the lastError code.
@@ -140,7 +140,7 @@ static void block_error()
 **/
 void _hx_std_socket_init()
 {
-#ifdef NEKO_WINDOWS
+#if defined(NEKO_WINDOWS)
    if( !init_done ) {
       WSAStartup(MAKEWORD(2,0),&init_data);
       init_done = true;
@@ -156,7 +156,7 @@ void _hx_std_socket_init()
 Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
 {
    // if socket was not setup (libs not loaded), then don't do the code
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    if (!socketType)
       socketType = hxcpp_alloc_kind();
 
@@ -196,7 +196,7 @@ Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
 **/
 void _hx_std_socket_close( Dynamic handle )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET s = val_sock(handle);
    POSIX_LABEL(close_again);
    if( closesocket(s) ) {
@@ -213,7 +213,7 @@ void _hx_std_socket_close( Dynamic handle )
 **/
 void _hx_std_socket_send_char( Dynamic o, int c )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    if( c < 0 || c > 255 )
       return;
@@ -240,7 +240,7 @@ void _hx_std_socket_send_char( Dynamic o, int c )
 **/
 int _hx_std_socket_send( Dynamic o, Array<unsigned char> buf, int p, int l )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    int dlen = buf->length;
    if( p < 0 || l < 0 || p > dlen || p + l > dlen )
@@ -266,7 +266,7 @@ int _hx_std_socket_send( Dynamic o, Array<unsigned char> buf, int p, int l )
 **/
 int _hx_std_socket_recv( Dynamic o, Array<unsigned char> buf, int p, int l )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    int dlen = buf->length;
    if( p < 0 || l < 0 || p > dlen || p + l > dlen )
@@ -295,7 +295,7 @@ int _hx_std_socket_recv( Dynamic o, Array<unsigned char> buf, int p, int l )
 **/
 int _hx_std_socket_recv_char( Dynamic o )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
 
    hx::EnterGCFreeZone();
@@ -324,7 +324,7 @@ int _hx_std_socket_recv_char( Dynamic o )
 **/
 void _hx_std_socket_write( Dynamic o, Array<unsigned char> buf )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    int datalen = buf->length;
    const char *cdata = (const char *)&buf[0];
@@ -357,7 +357,7 @@ void _hx_std_socket_write( Dynamic o, Array<unsigned char> buf )
 **/
 Array<unsigned char> _hx_std_socket_read( Dynamic o )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    Array<unsigned char> result = Array_obj<unsigned char>::__new();
    char buf[256];
@@ -393,7 +393,7 @@ Array<unsigned char> _hx_std_socket_read( Dynamic o )
 **/
 int _hx_std_host_resolve( String host )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    unsigned int ip;
 
    hx::EnterGCFreeZone();
@@ -433,7 +433,7 @@ inet_pton_func dynamic_inet_pton = 0;
 
 Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    in6_addr ipv6;
 
    hx::strbuf hostBuf;
@@ -511,7 +511,7 @@ Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
 **/
 String _hx_std_host_to_string( int ip )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    struct in_addr i;
    *(int*)&i = ip;
    return String( inet_ntoa(i) );
@@ -530,7 +530,7 @@ inet_ntop_func dynamic_inet_ntop = 0;
 
 String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    char buf[100];
    #ifdef DYNAMIC_INET_FUNCS
    if (!dynamic_inet_ntop_tried)
@@ -558,7 +558,7 @@ String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
 **/
 String _hx_std_host_reverse( int host )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    struct hostent *h = 0;
    unsigned int ip = host;
    hx::EnterGCFreeZone();
@@ -582,7 +582,7 @@ String _hx_std_host_reverse( int host )
 
 String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    if (!host.mPtr || host->length!=16)
       return String();
 
@@ -613,7 +613,7 @@ String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 **/
 String _hx_std_host_local()
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    char buf[256];
    hx::EnterGCFreeZone();
    if( gethostname(buf,256) == SOCKET_ERROR )
@@ -635,7 +635,7 @@ String _hx_std_host_local()
 **/
 void _hx_std_socket_connect( Dynamic o, int host, int port )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    struct sockaddr_in addr;
    memset(&addr,0,sizeof(addr));
    addr.sin_family = AF_INET;
@@ -664,7 +664,7 @@ void _hx_std_socket_connect( Dynamic o, int host, int port )
 **/
 void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    struct sockaddr_in6 addr;
    memset(&addr,0,sizeof(addr));
    addr.sin6_family = AF_INET6;
@@ -693,7 +693,7 @@ void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port
 **/
 void _hx_std_socket_listen( Dynamic o, int n )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    SOCKET sock = val_sock(o);
    hx::EnterGCFreeZone();
    if( listen(sock,n) == SOCKET_ERROR )
@@ -711,7 +711,7 @@ static fd_set INVALID;
 
 static fd_set *make_socket_array( Array<Dynamic> a, fd_set *tmp, SOCKET *n )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    FD_ZERO(tmp);
    if( !a.mPtr )
       return tmp;
@@ -737,7 +737,7 @@ static fd_set *make_socket_array( Array<Dynamic> a, fd_set *tmp, SOCKET *n )
 
 static Array<Dynamic> make_array_result( Array<Dynamic> a, fd_set *tmp )
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    if (!tmp || !a.mPtr)
       return null();
 
@@ -758,7 +758,7 @@ static Array<Dynamic> make_array_result( Array<Dynamic> a, fd_set *tmp )
 
 static void make_array_result_inplace(Array<Dynamic> a, fd_set *tmp)
 {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    if (!a.mPtr)
    return;
 
@@ -785,7 +785,7 @@ static void make_array_result_inplace(Array<Dynamic> a, fd_set *tmp)
 }
 
 static struct timeval *init_timeval( double f, struct timeval *t ) {
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    if (f<0)
       return 0;
    t->tv_usec = (f - (int)f ) * 1000000;
@@ -803,6 +803,7 @@ static struct timeval *init_timeval( double f, struct timeval *t ) {
 **/
 Array<Dynamic> _hx_std_socket_select( Array<Dynamic> rs, Array<Dynamic> ws, Array<Dynamic> es, Dynamic timeout )
 {
+   #if defined(NEKO_WINDOWS)
    SOCKET n = 0;
    fd_set rx, wx, ex;
    fd_set *ra, *wa, *ea;
@@ -833,6 +834,10 @@ Array<Dynamic> _hx_std_socket_select( Array<Dynamic> rs, Array<Dynamic> ws, Arra
    r[1] = make_array_result(ws,wa);
    r[2] = make_array_result(es,ea);
    return r;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -864,7 +869,7 @@ void _hx_std_socket_fast_select( Array<Dynamic> rs, Array<Dynamic> ws, Array<Dyn
    {
       hx::ExitGCFreeZone();
       HANDLE_EINTR(select_again);
-      #ifdef NEKO_WINDOWS
+      #if defined(NEKO_WINDOWS)
       hx::Throw( HX_CSTRING("Select error ") + String((int)WSAGetLastError()) );
       #else
       hx::Throw( HX_CSTRING("Select error ") + String((int)errno) );
@@ -1018,7 +1023,7 @@ void _hx_std_socket_set_timeout( Dynamic o, Dynamic t )
 {
    SOCKET sock = val_sock(o);
 
-#ifdef NEKO_WINDOWS
+#if defined(NEKO_WINDOWS)
    int time;
    if( !t.mPtr )
       time = 0;
@@ -1078,7 +1083,7 @@ void _hx_std_socket_set_blocking( Dynamic o, bool b )
 {
    SOCKET sock = val_sock(o);
    hx::EnterGCFreeZone();
-#ifdef NEKO_WINDOWS
+#if defined(NEKO_WINDOWS)
    {
       unsigned long arg = b?0:1;
       if( ioctlsocket(sock,FIONBIO,&arg) != 0 )
@@ -1146,7 +1151,7 @@ struct polldata : public hx::Object
 
    bool ok;
    int max;
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    struct fd_set *fdr;
    struct fd_set *fdw;
    struct fd_set *outr;
@@ -1163,7 +1168,7 @@ struct polldata : public hx::Object
    {
       ok = true;
       max = nsocks;
-      #ifdef NEKO_WINDOWS
+      #if defined(NEKO_WINDOWS)
       fdr = (fd_set*)malloc(FDSIZE(max));
       fdw = (fd_set*)malloc(FDSIZE(max));
       outr = (fd_set*)malloc(FDSIZE(max));
@@ -1195,7 +1200,7 @@ struct polldata : public hx::Object
       if (ok)
       {
          ok = false;
-         #ifdef NEKO_WINDOWS
+         #if defined(NEKO_WINDOWS)
          free(fdr);
          free(fdw);
          free(outr);
@@ -1262,7 +1267,7 @@ Array<Dynamic> _hx_std_socket_poll_prepare( Dynamic pdata, Array<Dynamic> rsocks
    if( len + wlen > p->max )
       hx::Throw(HX_CSTRING("Too many sockets in poll"));
 
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    for(int i=0;i<len;i++)
       p->fdr->fd_array[i] = val_sock( rsocks[i] );
    p->fdr->fd_count = len;
@@ -1310,7 +1315,7 @@ void _hx_std_socket_poll_events( Dynamic pdata, double timeout )
 {
    polldata *p = val_poll(pdata);
 
-   #ifdef NEKO_WINDOWS
+   #if defined(NEKO_WINDOWS)
    memcpy(p->outr,p->fdr,FDSIZE(p->fdr->fd_count));
    memcpy(p->outw,p->fdw,FDSIZE(p->fdw->fd_count));
 
