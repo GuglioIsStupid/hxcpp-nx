@@ -872,7 +872,9 @@ int _hx_std_sys_getch( bool b )
    hx::ExitGCFreeZone();
 
    return result;
-#else
+// all oher ones (in an elif because 2 more are needed as an else)
+#elif defined(ANDROID) || defined(HX_MACOS) || defined(HX_LINUX) || defined(HX_BSD) || defined(HX_ANDROID) || defined(HX_BLACKBERRY) || defined(HX_GCW0)
+
    // took some time to figure out how to do that
    // without relying on ncurses, which clear the
    // terminal on initscr()
@@ -888,6 +890,8 @@ int _hx_std_sys_getch( bool b )
    if( b ) fputc(c,stdout);
    hx::ExitGCFreeZone();
    return c;
+#   else
+   return 0;
 #   endif
 }
 
