@@ -54,7 +54,11 @@ typedef int SocketLen;
 #   define closesocket close
 #   define SOCKET_ERROR (-1)
 #   define INVALID_SOCKET (-1)
+#if defined(NEKO_WINDOWS)
 typedef socklen_t SocketLen;
+#else
+typedef unsigned int SocketLen;
+#endif
 #endif
 
 #if (defined(NEKO_WINDOWS) || defined(NEKO_MAC)) && !defined(MSG_NOSIGNAL)
