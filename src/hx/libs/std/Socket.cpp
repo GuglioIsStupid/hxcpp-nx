@@ -155,6 +155,8 @@ void _hx_std_socket_init()
 **/
 Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
 {
+   // if socket was not setup (libs not loaded), then don't do the code
+   #ifdef NEKO_WINDOWS
    if (!socketType)
       socketType = hxcpp_alloc_kind();
 
@@ -182,6 +184,10 @@ Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
    SocketWrapper *wrap = new SocketWrapper();
    wrap->socket = s;
    return wrap;
+   #else
+   hx::Throw(HX_CSTRING("Socket not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -190,11 +196,15 @@ Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
 **/
 void _hx_std_socket_close( Dynamic handle )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET s = val_sock(handle);
    POSIX_LABEL(close_again);
    if( closesocket(s) ) {
       HANDLE_EINTR(close_again);
    }
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -203,6 +213,7 @@ void _hx_std_socket_close( Dynamic handle )
 **/
 void _hx_std_socket_send_char( Dynamic o, int c )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    if( c < 0 || c > 255 )
       return;
@@ -217,6 +228,9 @@ void _hx_std_socket_send_char( Dynamic o, int c )
       block_error();
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -226,6 +240,7 @@ void _hx_std_socket_send_char( Dynamic o, int c )
 **/
 int _hx_std_socket_send( Dynamic o, Array<unsigned char> buf, int p, int l )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    int dlen = buf->length;
    if( p < 0 || l < 0 || p > dlen || p + l > dlen )
@@ -238,6 +253,10 @@ int _hx_std_socket_send( Dynamic o, Array<unsigned char> buf, int p, int l )
       block_error();
    hx::ExitGCFreeZone();
    return dlen;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 /**
@@ -247,6 +266,7 @@ int _hx_std_socket_send( Dynamic o, Array<unsigned char> buf, int p, int l )
 **/
 int _hx_std_socket_recv( Dynamic o, Array<unsigned char> buf, int p, int l )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    int dlen = buf->length;
    if( p < 0 || l < 0 || p > dlen || p + l > dlen )
@@ -263,6 +283,10 @@ int _hx_std_socket_recv( Dynamic o, Array<unsigned char> buf, int p, int l )
    }
    hx::ExitGCFreeZone();
    return dlen;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 /**
@@ -271,6 +295,7 @@ int _hx_std_socket_recv( Dynamic o, Array<unsigned char> buf, int p, int l )
 **/
 int _hx_std_socket_recv_char( Dynamic o )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
 
    hx::EnterGCFreeZone();
@@ -286,6 +311,10 @@ int _hx_std_socket_recv_char( Dynamic o )
    if( ret == 0 )
       hx::Throw(HX_CSTRING("Connection closed"));
    return cc;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 
@@ -295,6 +324,7 @@ int _hx_std_socket_recv_char( Dynamic o )
 **/
 void _hx_std_socket_write( Dynamic o, Array<unsigned char> buf )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    int datalen = buf->length;
    const char *cdata = (const char *)&buf[0];
@@ -313,6 +343,9 @@ void _hx_std_socket_write( Dynamic o, Array<unsigned char> buf )
       datalen -= slen;
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -324,6 +357,7 @@ void _hx_std_socket_write( Dynamic o, Array<unsigned char> buf )
 **/
 Array<unsigned char> _hx_std_socket_read( Dynamic o )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    Array<unsigned char> result = Array_obj<unsigned char>::__new();
    char buf[256];
@@ -347,6 +381,10 @@ Array<unsigned char> _hx_std_socket_read( Dynamic o )
 
    hx::ExitGCFreeZone();
    return result;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 /**
@@ -355,6 +393,7 @@ Array<unsigned char> _hx_std_socket_read( Dynamic o )
 **/
 int _hx_std_host_resolve( String host )
 {
+   #ifdef NEKO_WINDOWS
    unsigned int ip;
 
    hx::EnterGCFreeZone();
@@ -381,15 +420,20 @@ int _hx_std_host_resolve( String host )
    }
    hx::ExitGCFreeZone();
    return ip;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
-#ifdef DYNAMIC_INET_FUNCS
+#ifdef DYNAMIC_INET_FUNCS && defined(NEKO_WINDOWS)
 bool dynamic_inet_pton_tried = false;
 inet_pton_func dynamic_inet_pton = 0;
 #endif
 
 Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
 {
+   #ifdef NEKO_WINDOWS
    in6_addr ipv6;
 
    hx::strbuf hostBuf;
@@ -453,6 +497,10 @@ Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
       return null();
 
    return Array_obj<unsigned char>::fromData( (unsigned char *)&ipv6, 16 );
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 
@@ -463,13 +511,18 @@ Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
 **/
 String _hx_std_host_to_string( int ip )
 {
+   #ifdef NEKO_WINDOWS
    struct in_addr i;
    *(int*)&i = ip;
    return String( inet_ntoa(i) );
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return String();
+   #endif
 }
 
 
-#ifdef DYNAMIC_INET_FUNCS
+#ifdef DYNAMIC_INET_FUNCS && defined(NEKO_WINDOWS)
 bool dynamic_inet_ntop_tried = false;
 inet_ntop_func dynamic_inet_ntop = 0;
 #endif
@@ -477,6 +530,7 @@ inet_ntop_func dynamic_inet_ntop = 0;
 
 String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
 {
+   #ifdef NEKO_WINDOWS
    char buf[100];
    #ifdef DYNAMIC_INET_FUNCS
    if (!dynamic_inet_ntop_tried)
@@ -492,6 +546,10 @@ String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
    #else
    return String( inet_ntop(AF_INET6, &ip[0], buf, 100) );
    #endif
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return String();
+   #endif
 }
 
 /**
@@ -500,6 +558,7 @@ String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
 **/
 String _hx_std_host_reverse( int host )
 {
+   #ifdef NEKO_WINDOWS
    struct hostent *h = 0;
    unsigned int ip = host;
    hx::EnterGCFreeZone();
@@ -515,10 +574,15 @@ String _hx_std_host_reverse( int host )
    if( !h )
       return String();
    return String( h->h_name );
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return String();
+   #endif
 }
 
 String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 {
+   #ifdef NEKO_WINDOWS
    if (!host.mPtr || host->length!=16)
       return String();
 
@@ -536,6 +600,10 @@ String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
    if( !h )
       return String();
    return String( h->h_name );
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return String();
+   #endif
 }
 
 
@@ -545,6 +613,7 @@ String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 **/
 String _hx_std_host_local()
 {
+   #ifdef NEKO_WINDOWS
    char buf[256];
    hx::EnterGCFreeZone();
    if( gethostname(buf,256) == SOCKET_ERROR )
@@ -554,6 +623,10 @@ String _hx_std_host_local()
    }
    hx::ExitGCFreeZone();
    return String(buf);
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return String();
+   #endif
 }
 
 /**
@@ -562,6 +635,7 @@ String _hx_std_host_local()
 **/
 void _hx_std_socket_connect( Dynamic o, int host, int port )
 {
+   #ifdef NEKO_WINDOWS
    struct sockaddr_in addr;
    memset(&addr,0,sizeof(addr));
    addr.sin_family = AF_INET;
@@ -579,6 +653,9 @@ void _hx_std_socket_connect( Dynamic o, int host, int port )
       block_error();
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 
@@ -587,6 +664,7 @@ void _hx_std_socket_connect( Dynamic o, int host, int port )
 **/
 void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port )
 {
+   #ifdef NEKO_WINDOWS
    struct sockaddr_in6 addr;
    memset(&addr,0,sizeof(addr));
    addr.sin6_family = AF_INET6;
@@ -604,6 +682,9 @@ void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port
       block_error();
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 /**
@@ -612,6 +693,7 @@ void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port
 **/
 void _hx_std_socket_listen( Dynamic o, int n )
 {
+   #ifdef NEKO_WINDOWS
    SOCKET sock = val_sock(o);
    hx::EnterGCFreeZone();
    if( listen(sock,n) == SOCKET_ERROR )
@@ -620,12 +702,16 @@ void _hx_std_socket_listen( Dynamic o, int n )
       return;
    }
    hx::ExitGCFreeZone();
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 static fd_set INVALID;
 
 static fd_set *make_socket_array( Array<Dynamic> a, fd_set *tmp, SOCKET *n )
 {
+   #ifdef NEKO_WINDOWS
    FD_ZERO(tmp);
    if( !a.mPtr )
       return tmp;
@@ -643,10 +729,15 @@ static fd_set *make_socket_array( Array<Dynamic> a, fd_set *tmp, SOCKET *n )
       FD_SET(sock,tmp);
    }
    return tmp;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return &INVALID;
+   #endif
 }
 
 static Array<Dynamic> make_array_result( Array<Dynamic> a, fd_set *tmp )
 {
+   #ifdef NEKO_WINDOWS
    if (!tmp || !a.mPtr)
       return null();
 
@@ -659,38 +750,51 @@ static Array<Dynamic> make_array_result( Array<Dynamic> a, fd_set *tmp )
          r->push(s);
    }
    return r;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return null();
+   #endif
 }
 
 static void make_array_result_inplace(Array<Dynamic> a, fd_set *tmp)
 {
-    if (!a.mPtr)
+   #ifdef NEKO_WINDOWS
+   if (!a.mPtr)
+   return;
+
+   if (tmp == NULL)
+   {
+      a->__SetSize(0);
       return;
+   }
 
-    if (tmp == NULL)
-    {
-       a->__SetSize(0);
-       return;
-    }
+   int len = a->length;
+   int destPos = 0;
+   for(int i = 0; i < len; i++)
+   {
+      Dynamic s = a[i];
+      if (FD_ISSET(val_sock(s), tmp)) {
+         a[destPos++] = s;
+      }
+   }
 
-    int len = a->length;
-    int destPos = 0;
-    for(int i = 0; i < len; i++)
-    {
-       Dynamic s = a[i];
-       if (FD_ISSET(val_sock(s), tmp)) {
-           a[destPos++] = s;
-       }
-    }
-
-    a->__SetSize(destPos);
+   a->__SetSize(destPos);
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   #endif
 }
 
 static struct timeval *init_timeval( double f, struct timeval *t ) {
+   #ifdef NEKO_WINDOWS
    if (f<0)
       return 0;
    t->tv_usec = (f - (int)f ) * 1000000;
    t->tv_sec = (int)f;
    return t;
+   #else
+   hx::Throw(HX_CSTRING("Not supported"));
+   return 0;
+   #endif
 }
 
 /**
