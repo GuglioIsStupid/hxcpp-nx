@@ -25,6 +25,8 @@
     <!--LIB Links-->
     <flag value="-L${MINGW_ROOT}/usr/lib" />
     <flag value="-L${DEVKITPRO}/libnx/lib" />
+    <flag value="-L${DEVKITPRO}/libnx/lib/gcc/aarch64-none-elf/8.3.0" />
+    
 
 
     <objdir value="obj/switch${OBJEXT}/"/>
@@ -32,27 +34,11 @@
     <ext value=".o"/>
 </compiler>
 
-<linker id="dll" exe="aarch64-none-elf-g++">
-    <exe name="${CXX}" if="CXX" />
-    <fromfile value="" if="GCC_OLD" />
-    <flag value="-shared"/>
-    <flag value="-fpic"/>
-    <flag value="-fPIC"/>
-    <flag value="-m32" unless="noM32"/>
-    <flag value="-m64" if="HXCPP_M64" unless="noM64" />
-    <flag value="-Xlinker"/>
-    <flag value="--no-undefined" unless="HXCPP_ALLOW_UNDEFINED" />
-    <flag value="-debug" if="debug"/>
-    <lib name="-ldl"/>
-    <ext value=".dso"/>
-    <outflag value="-o "/>
-</linker>
-
-<linker id="exe" exe="aarch64-none-elf-g++">
+<linker id="elf" exe="aarch64-none-elf-g++">
     <exe name="${CXX}" if="CXX" />
     <fromfile value="" if="GCC_OLD" />
     <flag value="-debug" if="debug"/>
-    <ext value=""/>
+    <ext value="elf"/>
     <outflag value="-o "/>
 </linker>
 

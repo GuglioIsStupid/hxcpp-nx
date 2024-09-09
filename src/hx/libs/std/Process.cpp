@@ -268,7 +268,10 @@ Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
    #else // not windows ...
    {
    int input[2], output[2], error[2];
-   if( pipe(input) || pipe(output) || pipe(error) )
+   #if defined(NEKO_WINDOWS)
+      if( pipe(input) || pipe(output) || pipe(error) )
+         return null()
+   #else
       return null();
 
    hx::strbuf buf;
@@ -306,7 +309,9 @@ Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
       dup2(input[0],0);
       dup2(output[1],1);
       dup2(error[1],2);
+      #if defined(NEKO_WINDOWS)
       execvp(argv[0],(char* const*)&argv[0]);
+      #endif
       fprintf(stderr,"Command not found : %S\n",cmd.wchar_str());
       exit(1);
    }
