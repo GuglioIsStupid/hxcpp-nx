@@ -375,6 +375,8 @@ double __hxcpp_timezone_offset(double inSeconds)
    struct tm *result = localtime(&t);
    return -result->tm_isdst * 3600;
    #endif
+   
+   #endif
 }
 
 String __internal_to_string(struct tm time)
