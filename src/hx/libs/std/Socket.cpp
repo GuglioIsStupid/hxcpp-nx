@@ -38,11 +38,14 @@ typedef int SocketLen;
 #else
 #   include <sys/types.h>
 #   include <sys/time.h>
+#   ifndef SWITCH
+#   include <winsock2.h>
 #   include <netinet/in.h>
 #   include <netinet/tcp.h>
 #   include <arpa/inet.h>
 #   include <unistd.h>
 #   include <netdb.h>
+#   endif
 #   include <fcntl.h>
 #   include <errno.h>
 #   include <stdio.h>
