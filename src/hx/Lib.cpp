@@ -62,7 +62,7 @@ void *hxFindSymbol(Module inModule, const char *inSymbol) { return (void *)GetPr
 
 void hxFreeLibrary(Module inModule) { FreeLibrary(inModule); }
 
-#elif !defined(HX_SWITCH)
+#elif !defined(SWITCH)
 
 typedef void *Module;
 
