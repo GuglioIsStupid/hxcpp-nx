@@ -45,11 +45,11 @@ typedef int SocketLen;
 #   include <arpa/inet.h>
 #   include <unistd.h>
 #   include <netdb.h>
+#   include <poll.h>
 #   endif
 #   include <fcntl.h>
 #   include <errno.h>
 #   include <stdio.h>
-#   include <poll.h>
    typedef int SOCKET;
 #   define closesocket close
 #   define SOCKET_ERROR (-1)
