@@ -38,7 +38,7 @@ typedef int SocketLen;
 #else
 #   include <sys/types.h>
 #   include <sys/time.h>
-#   !defined(SWITCH)
+#   if !defined(SWITCH)
 #   include <winsock2.h>
 #   include <netinet/in.h>
 #   include <netinet/tcp.h>
