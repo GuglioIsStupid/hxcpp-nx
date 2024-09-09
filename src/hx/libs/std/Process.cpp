@@ -333,6 +333,7 @@ Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
    return p;
 
    #endif // not APPLETV/HX_APPLEWATCH
+   #endif // not HX_WINRT
 }
 
 
