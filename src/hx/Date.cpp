@@ -366,7 +366,14 @@ double __hxcpp_timezone_offset(double inSeconds)
 
    return mktime(&localTime) - mktime(&gmTime);
    #else
+   // if struct tm has a tm_gmtoff field, use it
+   #if defined(__linux__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__APPLE__) || defined(__ANDROID__) || defined(__QNXNTO__)
    return localTime.tm_gmtoff;
+   #else
+   // otherwise, use the timezone global variable
+   time_t t = (time_t) inSeconds;
+   struct tm *result = localtime(&t);
+   return -result->tm_isdst * 3600;
    #endif
 }
 
