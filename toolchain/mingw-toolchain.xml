@@ -1,6 +1,5 @@
 <xml>
 
-<!-- MINGW TOOLS -------------------------------------->
 
 <section if="linux_host||mac_host">
   <section if="HXCPP_M64">
