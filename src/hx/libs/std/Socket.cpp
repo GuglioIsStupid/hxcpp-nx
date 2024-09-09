@@ -426,9 +426,11 @@ int _hx_std_host_resolve( String host )
    #endif
 }
 
-#ifdef DYNAMIC_INET_FUNCS && defined(NEKO_WINDOWS)
+#ifdef DYNAMIC_INET_FUNCS
 bool dynamic_inet_pton_tried = false;
-inet_pton_func dynamic_inet_pton = 0;
+#if define(NEKO_WINDOWS)
+inet_ntop_func dynamic_inet_ntop = 0;
+#endif
 #endif
 
 Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
@@ -522,9 +524,11 @@ String _hx_std_host_to_string( int ip )
 }
 
 
-#ifdef DYNAMIC_INET_FUNCS && defined(NEKO_WINDOWS)
+#ifdef DYNAMIC_INET_FUNCS 
 bool dynamic_inet_ntop_tried = false;
+#if define(NEKO_WINDOWS)
 inet_ntop_func dynamic_inet_ntop = 0;
+#endif
 #endif
 
 
