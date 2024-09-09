@@ -1882,6 +1882,8 @@ class BuildTool
       else if (defines.exists("switch")) {
          defines.set("toolchain", "switch");
          defines.set("switch", "switch");
+         defines.set("SWITCH", "SWITCH");
+
       }
       else if (defines.exists("iphonesim"))
       {

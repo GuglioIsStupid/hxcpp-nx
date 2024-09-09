@@ -62,7 +62,7 @@ void *hxFindSymbol(Module inModule, const char *inSymbol) { return (void *)GetPr
 
 void hxFreeLibrary(Module inModule) { FreeLibrary(inModule); }
 
-#elif defined HX_SWITCH
+#elif !defined(HX_SWITCH)
 
 typedef void *Module;
 
@@ -97,6 +97,21 @@ Module hxLoadLibrary(String inLib)
 void *hxFindSymbol(Module inModule, const char *inSymbol) { return dlsym(inModule,inSymbol); }
 
 void hxFreeLibrary(Module inModule) { dlclose(inModule); }
+
+#elif defined(HX_SWITCH)
+
+// Nintendo switch
+typedef void *Module;
+Module hxLoadLibrary(String inLib) {
+   return NULL;
+}
+
+void *hxFindSymbol(Module inModule, const char *inSymbol) {
+   return NULL;
+}
+
+void hxFreeLibrary(Module inModule) {
+}
 
 #endif
 
