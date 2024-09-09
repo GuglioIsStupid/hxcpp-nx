@@ -19,6 +19,8 @@
     <include name="toolchain/common-defines.xml" />
     <flag value="-DHXCPP_M64" if="HXCPP_M64"/>
     <flag value="-I${HXCPP}/include"/>
+    <flag value="-I${MINGW_ROOT}/include"/>
+
     <objdir value="obj/switch${OBJEXT}/"/>
     <outflag value="-o"/>
     <ext value=".o"/>
