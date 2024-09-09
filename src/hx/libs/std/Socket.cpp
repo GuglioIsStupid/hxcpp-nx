@@ -37,8 +37,6 @@ typedef WINSOCK_API_LINKAGE  PCSTR (WSAAPI *inet_ntop_func)(INT  Family, PVOID p
 typedef int SocketLen;
 #else
 #   include <sys/types.h>
-#   include <winsock2.h>
-
 #   include <sys/time.h>
 #   include <netinet/in.h>
 #   include <netinet/tcp.h>
