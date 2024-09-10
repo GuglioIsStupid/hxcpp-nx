@@ -85,7 +85,8 @@
     <flag value="-mtune=cortex-a57" />
     <flag value="-mtp=soft" />
     <flag value="-D__SWITCH__" />
-     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
+    <flag value="-fPIE" />
+    <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
 
     <ext value=".elf"/>
     <outflag value="-o "/>
