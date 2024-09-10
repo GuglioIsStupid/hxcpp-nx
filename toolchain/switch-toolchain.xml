@@ -82,8 +82,7 @@
     <!--Create the .nro from the .elf and romfs/control.nacp-->
 
     <exe name="elf2nro"/>
-    <flag value="--nacp=romfs/control.nacp"/>
-    <flag value="--icon=${ICON}" if="ICON"/>
+    <flag value="obj/ApplicationMain.elf obj/ApplicationMain.nro --nacp=obj/control.nacp"/>
 
 </stripper>
 
