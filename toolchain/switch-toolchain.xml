@@ -35,35 +35,41 @@
 </linker>
 
 <set name="nostrip" value="1" if="debug"/>
-<set name="nostrip" value="1" if="dll_import"/>
-<set name="nostrip" value="1" if="dll_export"/>
 <set name="nostrip" value="1" if="HXCPP_DEBUG_LINK"/>
 <unset name="nostrip" if="HXCPP_DEBUG_LINK_AND_STRIP"/>
 
 <compiler id="switch" exe="aarch64-none-elf-g++">
-    <exe name="${CXX}" if="CXX" />
     <flag value="-c"/>
-    <flag value="-fvisibility=hidden"/>
     <cppflag value="-frtti"/>
-    <cppflag value="-std=c++11" if="HXCPP_CPP11" />
-    <cppflag value="-std=c++17" if="HXCPP_CPP17"/>
-    <flag value="-g" if="debug"/>
-    <flag value="-O2" unless="debug"/>
-    <flag value="-fpic"/>
-    <flag value="-fPIC"/>
-    <flag value="-Wno-overflow" />
-    <cppflag value="-Wno-invalid-offsetof" />
+    <flag value="-g" />
+    <flag value="-O3" />
+    <flag value="-ffunction-sections" />
+    <flag value="-march=armv8-a" />
+    <flag value="-mtune=cortex-a57" />
+    <flag value="-mtp=soft" />
+    <flag value="-fPIE" />
+    <flag value="-D__SWITCH__" />
+    
+    <!--<flag value="-g" />
+    <flag value="-Wall" />
+    <flag value="-O3" />
+    <flag value="-ffunction-sections" />
+    <flag value="-march=armv8-a" />
+    <flag value="-mtune=cortex-a57" />
+    <flag value="-mtp=soft" />
+    <flag value="-fPIE" />
+    <flag value="-D__SWITCH__" />
+    -->
     
     <include name="toolchain/common-defines.xml" />
-    <flag value="-DHXCPP_M64" if="HXCPP_M64"/>
     <flag value="-I${HXCPP}/include"/>
-    <flag value="-I${MINGW_ROOT}/include"/>
-    <flag value="-I${DEVKITPRO}/libnx/include"/>
+    <flag value="-IC:/devkitPro/libnx/include"/>
 
     <!--LIB Links-->
-    <flag value="-L${MINGW_ROOT}/usr/lib" />
-    <flag value="-L${DEVKITPRO}/libnx/lib" />
-    <flag value="-L${DEVKITPRO}/libnx/lib/gcc/aarch64-none-elf/8.3.0" />
+    <flag value="-debug" if="debug"/>
+    <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
+    <flag value="-Wl,-no-as-needed" />
+    <cppflag value="-Wno-invalid-offsetof" />
 
     <objdir value="obj/switch${OBJEXT}/"/>
     <outflag value="-o"/>
@@ -71,9 +77,16 @@
 </compiler>
 
 <linker id="exe" exe="aarch64-none-elf-g++">
-    <exe name="${CXX}" if="CXX" />
-    <fromfile value="" if="GCC_OLD" />
-    <flag value="-debug" if="debug"/>
+    <flag value="-g" />
+    <flag value="-Wall" />
+    <flag value="-O3" />
+    <flag value="-ffunction-sections" />
+    <flag value="-march=armv8-a" />
+    <flag value="-mtune=cortex-a57" />
+    <flag value="-mtp=soft" />
+    <flag value="-D__SWITCH__" />
+     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
+
     <ext value=".elf"/>
     <outflag value="-o "/>
 </linker>
