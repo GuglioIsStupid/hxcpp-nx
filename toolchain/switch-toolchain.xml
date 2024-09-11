@@ -67,28 +67,6 @@
     <outflag value="-o "/>
 </linker>
 
-<linker id="exe" exe="aarch64-none-elf-g++">
-    <flag value="-g" />
-    <flag value="-Wall" />
-    <flag value="-O3" />
-    <flag value="-ffunction-sections" />
-    <flag value="-march=armv8-a" />
-    <flag value="-mtune=cortex-a57" />
-    <flag value="-mtp=soft" />
-    <flag value="-D__SWITCH__" />
-    <flag value="-fPIE" />
-    <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
-    <flag value="-IC:/devkitPro/libnx/include"/>
-    <flag value="-LC:/devkitPro/libnx/lib" />
-    <flag value="-shared"/>
-    <flag value="-fpic"/>
-    <flag value="-fPIC"/>
-    <flag value="-Xlinker"/>
-
-    <ext value=".elf"/>
-    <outflag value="-o "/>
-</linker>
-
 <stripper id="strip" exe="elf2nro">
     <!--Create the .nro from the .elf and romfs/control.nacp-->
 
