@@ -10,38 +10,7 @@
 <set name='HXCPP_AR' value='aarch64-none-elf-ar' />
 <set name='HXCPP_RANLIB' value='aarch64-none-elf-ranlib' />
 
-<linker id="static_link" exe="ar" unless="windows">
-  <ext value="${LIBEXT}"/>
-
-  <exe name="${EXEPREFIX}-ar" if="EXEPREFIX" />
-  <exe name="${HXCPP_AR}" if="HXCPP_AR" />
-  <fromfile value="" if="GCC_OLD" />
-  <fromfile value="" if="tizen" />
-  <fromfile value="" if="blackberry" />
-  <outflag value="-cr "/>
-  <outflag value="cr " if="emscripten" />
-  <section if="HXCPP_USE_LIBTOOL">
-     <exe name="libtool"  />
-     <exe name="${HXCPP_LIBTOOL}" if="HXCPP_LIBTOOL" />
-     <outflag value="-o "  />
-     <fromfile value="-filelist " needsQuotes="false" />
-  </section>
-  <!-- <outflag value="-o " if="emscripten" /> -->
-  <recreate value="1" unless="HXCPP_LIBTOOL" />
-
-  <expandAr value="1" if="android" />
-  <expandAr value="1" if="emscripten" />
-  <expandAr value="1" if="linux" />
-  <section unless="HXCPP_USE_LIBTOOL">
-     <ranlib name="ranlib" />
-     <ranlib name="${EXEPREFIX}-ranlib" if="EXEPREFIX" />
-     <ranlib name="${HXCPP_RANLIB}" if="HXCPP_RANLIB" />
-  </section>
-</linker>
-
-<set name="nostrip" value="1" if="debug"/>
-<set name="nostrip" value="1" if="HXCPP_DEBUG_LINK"/>
-<unset name="nostrip" if="HXCPP_DEBUG_LINK_AND_STRIP"/>
+<include name="toolchain/gcc-toolchain.xml"/>
 
 <compiler id="switch" exe="aarch64-none-elf-g++">
     <exe name="${CXX}" if="CXX" />
@@ -75,6 +44,28 @@
     <outflag value="-o"/>
     <ext value=".o"/>
 </compiler>
+
+<linker id="exe" exe="aarch64-none-elf-g++">
+    <flag value="-g" />
+    <flag value="-Wall" />
+    <flag value="-O3" />
+    <flag value="-ffunction-sections" />
+    <flag value="-march=armv8-a" />
+    <flag value="-mtune=cortex-a57" />
+    <flag value="-mtp=soft" />
+    <flag value="-D__SWITCH__" />
+    <flag value="-fPIE" />
+    <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
+    <flag value="-IC:/devkitPro/libnx/include"/>
+    <flag value="-LC:/devkitPro/libnx/lib" />
+    <flag value="-shared"/>
+    <flag value="-fpic"/>
+    <flag value="-fPIC"/>
+    <flag value="-Xlinker"/>
+
+    <ext value=".elf"/>
+    <outflag value="-o "/>
+</linker>
 
 <linker id="exe" exe="aarch64-none-elf-g++">
     <flag value="-g" />
