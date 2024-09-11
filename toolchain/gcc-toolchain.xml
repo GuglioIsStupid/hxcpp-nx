@@ -5,7 +5,7 @@
 
 <set name="USE_GCC_FILETYPES" value="1"/>
 
-<linker id="static_link" exe="ar" unless="windows">
+<linker id="static_link" exe="aarch64-none-elf-ar" unless="windows">
   <ext value="${LIBEXT}"/>
 
   <exe name="${EXEPREFIX}-ar" if="EXEPREFIX" />
