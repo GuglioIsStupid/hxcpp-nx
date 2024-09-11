@@ -1883,7 +1883,9 @@ class BuildTool
          defines.set("toolchain", "switch");
          defines.set("switch", "switch");
          defines.set("SWITCH", "SWITCH");
-
+         defines.set("xcompile", "1");
+         defines.set("HXCPP_LINUX_ARM64", "1");
+         defines.set("HXCPP_NO_M32", "1");
       }
       else if (defines.exists("iphonesim"))
       {

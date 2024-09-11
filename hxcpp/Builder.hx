@@ -61,7 +61,7 @@ class Builder
 
             switch(target)
             {
-               case "ios", "android", "blackberry", "tizen", "emscripten", "webos", "windows", "msvc", "linux", "mac", "mingw", "tvos":
+               case "ios", "android", "blackberry", "tizen", "emscripten", "webos", "windows", "msvc", "linux", "mac", "mingw", "tvos", "switch":
                   defaultTarget = false;
                   if (linkStatic)
                   {
@@ -197,6 +197,9 @@ class Builder
                   // NOTE: removed as there's no 32bit support for the AppleTV simulator
                   //validArchs.set("x86", ["-Dappletvsim", "-DENABLE_BITCODE"].concat(staticFlags) );
                   validArchs.set("x86_64", ["-Dappletvsim", "-DHXCPP_M64", "-DENABLE_BITCODE"].concat(staticFlags) );
+
+               case "switch":
+                  validArchs.set("arm64", ["-Dswitch"].concat(staticFlags) );
 
             }
 

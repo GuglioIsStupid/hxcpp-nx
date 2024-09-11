@@ -61,7 +61,7 @@
 
 #endif
 
-#include <dlfcn.h>
+/* #include <dlfcn.h> */
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
@@ -248,7 +248,9 @@ extern "C" ret name def_args;
       #ifndef ANDROID // {
          if (sResolveProc==0)
          {
+            #ifdef dlsym
             sResolveProc = (ResolveProc)dlsym(RTLD_DEFAULT,"hx_cffi");
+            #endif
          }
 
          #ifdef NEKO_COMPATIBLE

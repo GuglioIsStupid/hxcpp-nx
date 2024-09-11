@@ -5,6 +5,11 @@
 
 <set name="USE_GCC_FILETYPES" value="1"/>
 
+<set name='CXX' value='aarch64-none-elf-g++' />
+<set name='HXCPP_STRIP' value='aarch64-none-elf-strip' />
+<set name='HXCPP_AR' value='aarch64-none-elf-ar' />
+<set name='HXCPP_RANLIB' value='aarch64-none-elf-ranlib' />
+
 <linker id="static_link" exe="ar" unless="windows">
   <ext value="${LIBEXT}"/>
 
@@ -39,33 +44,28 @@
 <unset name="nostrip" if="HXCPP_DEBUG_LINK_AND_STRIP"/>
 
 <compiler id="switch" exe="aarch64-none-elf-g++">
+    <exe name="${CXX}" if="CXX" />
     <flag value="-c"/>
     <cppflag value="-frtti"/>
+    <cppflag value="-std=c++11" if="HXCPP_CPP11" />
     <flag value="-g" />
-    <flag value="-O3" />
-    <flag value="-ffunction-sections" />
-    <flag value="-march=armv8-a" />
-    <flag value="-mtune=cortex-a57" />
-    <flag value="-mtp=soft" />
-    <flag value="-fPIE" />
+    <flag value='-march=armv8-a+crc+crypto' />
+    <flag value='-mtp=soft' />
+    <flag value='-mtune=cortex-a57' />
+    <flag value='-fPIE' />
+    <flag value='-Wall' />
+    <flag value='-D__SWITCH__' />
+    <flag value='-D__TM_GMTOFF=tm_gmtoff'/>
+    <flag value='-ffunction-sections' />
+    <flag value='-fexceptions' />
+    <flag value='-fpermissive' />
     <flag value="-D__SWITCH__" />
-    
-    <!--<flag value="-g" />
-    <flag value="-Wall" />
-    <flag value="-O3" />
-    <flag value="-ffunction-sections" />
-    <flag value="-march=armv8-a" />
-    <flag value="-mtune=cortex-a57" />
-    <flag value="-mtp=soft" />
-    <flag value="-fPIE" />
-    <flag value="-D__SWITCH__" />
-    -->
     
     <include name="toolchain/common-defines.xml" />
     <flag value="-I${HXCPP}/include"/>
     <flag value="-IC:/devkitPro/libnx/include"/>
+    <flag value="-LC:/devkitPro/libnx/lib" />
 
-    <!--LIB Links-->
     <flag value="-debug" if="debug"/>
     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
     <flag value="-Wl,-no-as-needed" />
@@ -87,6 +87,12 @@
     <flag value="-D__SWITCH__" />
     <flag value="-fPIE" />
     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
+    <flag value="-IC:/devkitPro/libnx/include"/>
+    <flag value="-LC:/devkitPro/libnx/lib" />
+    <flag value="-shared"/>
+    <flag value="-fpic"/>
+    <flag value="-fPIC"/>
+    <flag value="-Xlinker"/>
 
     <ext value=".elf"/>
     <outflag value="-o "/>
