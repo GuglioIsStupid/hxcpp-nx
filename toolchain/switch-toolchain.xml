@@ -33,6 +33,7 @@
     <include name="toolchain/common-defines.xml" />
     <flag value="-I${HXCPP}/include"/>
     <flag value="-IC:/devkitPro/libnx/include"/>
+    <flag value="-IC:\devkitPro\msys2\usr\include"/>
     <flag value="-LC:/devkitPro/libnx/lib" />
 
     <flag value="-debug" if="debug"/>
