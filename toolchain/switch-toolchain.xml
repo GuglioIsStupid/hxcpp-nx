@@ -23,6 +23,7 @@
     <flag value='-mtune=cortex-a57' />
     <flag value='-fPIE' />
     <flag value='-D__SWITCH__' />
+    <flag value='-DHX_SWITCH' />
     <flag value='-D__TM_GMTOFF=tm_gmtoff'/>
     <flag value='-ffunction-sections' />
     <flag value='-fexceptions' />
@@ -34,6 +35,7 @@
     <flag value="-IC:/devkitPro/libnx/include"/>
     <flag value="-IC:\devkitPro\msys2\usr\include"/>
     <flag value="-LC:/devkitPro/libnx/lib" />
+    <flag value="-LC:\devkitPro\devkitA64\aarch64-none-elf\lib" />
 
     <flag value="-debug" if="debug"/>
     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
@@ -53,6 +55,7 @@
     <flag value="-mtune=cortex-a57" />
     <flag value="-mtp=soft" />
     <flag value="-D__SWITCH__" />
+    <flag value='-DHX_SWITCH' />
     <flag value="-fPIE" />
     <flag value="-specs=C:/devkitPro/libnx/switch.specs" />
     <flag value="-IC:/devkitPro/libnx/include"/>
