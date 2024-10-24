@@ -22,7 +22,6 @@
     <flag value='-mtp=soft' />
     <flag value='-mtune=cortex-a57' />
     <flag value='-fPIE' />
-    <flag value='-Wall' />
     <flag value='-D__SWITCH__' />
     <flag value='-D__TM_GMTOFF=tm_gmtoff'/>
     <flag value='-ffunction-sections' />
@@ -48,7 +47,6 @@
 
 <linker id="exe" exe="aarch64-none-elf-g++">
     <flag value="-g" />
-    <flag value="-Wall" />
     <flag value="-O3" />
     <flag value="-ffunction-sections" />
     <flag value="-march=armv8-a" />
